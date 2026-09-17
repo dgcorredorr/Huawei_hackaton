@@ -15,7 +15,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 export class ControlRoomController {
   constructor(
     private readonly tickets: TicketRepository,
-    private readonly incidents: IncidentRepository,
+    private readonly incidentRepo: IncidentRepository,
     private readonly correlation: CorrelationService,
     private readonly triage: TriageService,
     private readonly audit: AuditRepository,
@@ -50,13 +50,13 @@ export class ControlRoomController {
   @Get('incidents')
   @ApiOperation({ summary: 'Lista de grupos de incidentes' })
   async incidents() {
-    return this.incidents.findAll();
+    return this.incidentRepo.findAll();
   }
 
   @Get('incidents/:id')
   @ApiOperation({ summary: 'Detalle de un incidente con tickets miembros' })
   async incidentDetail(@Param('id') id: string) {
-    const incident = await this.incidents.findById(id);
+    const incident = await this.incidentRepo.findById(id);
     const tickets = await this.tickets.findByIncidentGroup(id);
     return { incident, tickets };
   }
@@ -86,7 +86,7 @@ export class ControlRoomController {
   @ApiOperation({ summary: 'Estadísticas del war room' })
   async stats() {
     const all = await this.tickets.findAll({ status: 'classified' });
-    const incidents = await this.incidents.findAll();
+    const incidents = await this.incidentRepo.findAll();
     const majorIncidents = incidents.filter((i) => i.major_incident_candidate);
     const p1 = all.filter((t) => t.triage?.priority === 'P1').length;
     const p2 = all.filter((t) => t.triage?.priority === 'P2').length;

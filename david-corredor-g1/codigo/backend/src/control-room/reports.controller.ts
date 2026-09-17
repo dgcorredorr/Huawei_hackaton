@@ -13,7 +13,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 export class ReportsController {
   constructor(
     private readonly tickets: TicketRepository,
-    private readonly incidents: IncidentRepository,
+    private readonly incidentRepo: IncidentRepository,
     private readonly audit: AuditRepository,
   ) {}
 
@@ -65,7 +65,7 @@ export class ReportsController {
   @Get('incidents/:id')
   @ApiOperation({ summary: 'Reporte de explicabilidad para un incidente mayor (Bono C)' })
   async incidentReport(@Param('id') id: string) {
-    const incident = await this.incidents.findById(id);
+    const incident = await this.incidentRepo.findById(id);
     if (!incident) return { error: 'Incidente no encontrado' };
 
     const tickets = await this.tickets.findByIncidentGroup(id);

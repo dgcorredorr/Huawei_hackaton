@@ -36,8 +36,8 @@ export class IncidentDoc extends Document {
   @Prop({ type: [String], default: [] })
   affected_regions: string[];
 
-  @Prop({ default: null })
-  executive_brief?: object;
+  @Prop({ type: Object, default: null })
+  executive_brief?: Record<string, unknown>;
 }
 
 export const IncidentSchema = SchemaFactory.createForClass(IncidentDoc);

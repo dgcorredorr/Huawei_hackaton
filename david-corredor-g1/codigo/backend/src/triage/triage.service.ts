@@ -35,8 +35,8 @@ export class TriageService {
     private readonly config: ConfigService,
     private readonly logger: AppLogger,
   ) {
-    this.maxRetries = this.config.get<number>('MAX_RETRIES', 3);
-    this.confidenceThreshold = this.config.get<number>('CONFIDENCE_THRESHOLD', 0.6);
+    this.maxRetries = Number(this.config.get<string>('MAX_RETRIES', '3'));
+    this.confidenceThreshold = Number(this.config.get<string>('CONFIDENCE_THRESHOLD', '0.6'));
   }
 
   /**

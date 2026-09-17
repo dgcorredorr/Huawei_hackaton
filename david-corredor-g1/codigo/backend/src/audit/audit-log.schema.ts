@@ -10,7 +10,7 @@ export class AuditLogDoc extends Document {
   ticket_id: string;
 
   @Prop({ required: true })
-  model: string;
+  model_name: string;
 
   @Prop({ required: true })
   attempts: number;

@@ -49,11 +49,11 @@ export class GlmService implements OnModuleInit {
       apiKey: apiKey ?? 'missing',
       baseURL,
       maxRetries: 0, // gestionamos retries nosotros para backoff custom
-      timeout: this.config.get<number>('GLM_TIMEOUT_MS', 30_000),
+      timeout: Number(this.config.get<string>('GLM_TIMEOUT_MS', '30000')),
     });
     this.model = this.config.get<string>('GLM_MODEL') ?? 'glm-5.2';
-    this.timeoutMs = this.config.get<number>('GLM_TIMEOUT_MS', 30_000);
-    this.limit = pLimit(this.config.get<number>('GLM_MAX_CONCURRENCY', 5));
+    this.timeoutMs = Number(this.config.get<string>('GLM_TIMEOUT_MS', '30000'));
+    this.limit = pLimit(Number(this.config.get<string>('GLM_MAX_CONCURRENCY', '5')));
     this.logger.log(`GLM 5.2 configurado — modelo: ${this.model}, baseURL: ${baseURL}`, 'GlmService');
   }
 

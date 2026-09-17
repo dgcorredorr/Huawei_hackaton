@@ -9,7 +9,7 @@ export class AuditRepository {
     @InjectModel(AuditLogDoc.name) private readonly model: Model<AuditLogDoc>,
   ) {}
 
-  async log(entry: Omit<AuditLogDoc, '_id' | 'createdAt' | 'updatedAt'>): Promise<void> {
+  async log(entry: Partial<AuditLogDoc>): Promise<void> {
     await this.model.create(entry);
   }
 

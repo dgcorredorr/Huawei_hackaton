@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TicketDoc, TicketSchema } from './ticket.schema';
 import { TicketRepository } from './ticket.repository';
@@ -10,7 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 @Module({
   imports: [
     SharedModule,
-    TriageModule,
+    forwardRef(() => TriageModule),
     MongooseModule.forFeature([{ name: TicketDoc.name, schema: TicketSchema }]),
   ],
   providers: [TicketRepository, TicketsService],

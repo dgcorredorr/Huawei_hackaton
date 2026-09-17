@@ -33,6 +33,6 @@ import { HealthController } from './health.controller';
     ControlRoomModule,
   ],
   controllers: [HealthController],
-  providers: [KafkaService, AppLogger],
+  providers: [AppLogger],
 })
 export class AppModule {}

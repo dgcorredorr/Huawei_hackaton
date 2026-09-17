@@ -103,7 +103,7 @@ export class CorrelationService {
    * Pre-filtro por reglas: agrupa por (category + module + region).
    * Reduce los candidatos antes de llamar a GLM.
    */
-  private preFilter(tickets: Array<{ ticket_id: string; region: string; triage?: { category: string; product_or_module: string; priority: string } }>) {
+  private preFilter(tickets: Array<{ ticket_id: string; region: string; created_at: string; triage?: { category: string; product_or_module: string; priority: string; summary: string } }>) {
     const buckets = new Map<string, typeof tickets>();
     for (const t of tickets) {
       if (!t.triage) continue;

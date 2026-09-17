@@ -20,9 +20,14 @@ export class AuditService {
   }): Promise<string> {
     const correlation_id = `corr-${randomUUID().slice(0, 8).toUpperCase()}`;
     await this.repo.log({
-      ...params,
+      ticket_id: params.ticket_id,
+      model_name: params.model,
+      attempts: params.attempts,
+      validation_status: params.validation_status,
       correlation_id,
       processed_at: new Date().toISOString(),
+      ...(params.error_code ? { error_code: params.error_code } : {}),
+      ...(params.error_message ? { error_message: params.error_message } : {}),
     });
     return correlation_id;
   }
