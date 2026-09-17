@@ -142,7 +142,48 @@ export default function Page() {
           <div className="page-heading"><div><p className="kicker"><span className="live-pulse" /> OPERACIONES EN TIEMPO REAL</p><h1>Hola, Lucía <span className="wave">✦</span></h1><p className="subheading">Esto es lo que requiere atención ahora.</p></div><div className="sla-card"><div className="sla-icon"><Clock3 size={17} /></div><div><span>PRÓXIMO SLA CRÍTICO</span><strong>01:20:00</strong></div><small>10:00 UTC</small></div></div>
           <div className="metric-grid"><Metric label="Tickets pendientes" value={stats ? String(stats.total_tickets) : '...'} delta="+18x" note="vs. volumen normal" tone="red" /><Metric label="P1 + P2 en cola" value={stats ? String(stats.by_priority.P1 + stats.by_priority.P2) : '...'} delta={stats ? String(stats.requires_human_review) : '0'} note="requieren atención" tone="amber" /><Metric label="Incidentes activos" value={stats ? String(stats.total_incidents) : '...'} delta={stats ? String(stats.major_incidents) : '0'} note="candidato mayor" tone="violet" /><Metric label="Procesados por IA" value="98,4%" delta="↑ 2,1%" note="confianza promedio" tone="cyan" /></div>
           <div className="section-tabs"><div className="tabs"><button className={activeTab === 'queue' ? 'tab active' : 'tab'} onClick={() => setActiveTab('queue')}>Cola priorizada <span>{tickets.length}</span></button><button className={activeTab === 'incidents' ? 'tab active' : 'tab'} onClick={() => setActiveTab('incidents')}>Incidentes <span>{incidents.length}</span></button></div><button className="text-button"><Download size={15} /> Exportar reporte</button></div>
-          {activeTab === 'queue' ? <div className="queue-layout"><section className="queue-panel"><div className="toolbar"><div className="search-box"><Search size={16} /><input aria-label="Buscar tickets" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar ticket, cliente o texto..." /></div><div className="filters"><select aria-label="Filtrar por prioridad" value={priority} onChange={(e) => setPriority(e.target.value)}><option>Todas</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select><select aria-label="Filtrar por categoría" value={category} onChange={(e) => setCategory(e.target.value)}><option>Todas</option><option>Cuenta y acceso</option><option>Disponibilidad y rendimiento</option><option>Integraciones</option><option>Datos y exportación</option><option>Facturación</option><option>Solicitud de función</option></select><button className="filter-btn"><Filter size={15} /> Filtros <span>2</span></button></div></div><div className="queue-head"><span>{filteredTickets.length} tickets visibles</span><button className="sort-button">Prioridad <ChevronDown size={14} /></button></div><div className="ticket-list">{filteredTickets.map((ticket) => <button key={ticket.id} className={`ticket-row ${selectedId === ticket.id ? 'selected' : ''}`} onClick={() => setSelectedId(ticket.id)}><span className={`priority-badge ${priorityStyles[ticket.priority]}`}>{ticket.priority}</span><div className="ticket-main"><div className="ticket-meta"><strong>{ticket.id}</strong><span>{ticket.customer}</span><span className="ticket-time">{ticket.time}</span></div><p>{ticket.title}</p><div className="ticket-tags"><span>{ticket.category}</span><span>{ticket.module}</span>{ticket.incident !== '—' && <span className="incident-tag"><AlertTriangle size={11} /> {ticket.incident}</span>}</div></div><div className="confidence"><span>{ticket.confidence}%</span><small>confianza</small></div><ArrowUpRight className="row-arrow" size={16} /></button>)}</div></section>{selected && <TicketDetail ticket={selected} />}</div> : <IncidentView incidents={incidents} onSelect={(id) => { setActiveTab('queue'); setSelectedId(id) }} />}</div>
+          {activeTab === 'queue' ? (
+            <div className="queue-layout">
+              <section className="queue-panel">
+                <div className="toolbar">
+                  <div className="search-box">
+                    <Search size={16} />
+                    <input aria-label="Buscar tickets" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar ticket, cliente o texto..." />
+                  </div>
+                  <div className="filters">
+                    <select aria-label="Filtrar por prioridad" value={priority} onChange={(e) => setPriority(e.target.value)}>
+                      <option>Todas</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option>
+                    </select>
+                    <select aria-label="Filtrar por categoría" value={category} onChange={(e) => setCategory(e.target.value)}>
+                      <option>Todas</option><option>Cuenta y acceso</option><option>Disponibilidad y rendimiento</option><option>Integraciones</option><option>Datos y exportación</option><option>Facturación</option><option>Solicitud de función</option>
+                    </select>
+                    <button className="filter-btn"><Filter size={15} /> Filtros <span>2</span></button>
+                  </div>
+                </div>
+                <div className="queue-head">
+                  <span>{filteredTickets.length} tickets visibles</span>
+                  <button className="sort-button">Prioridad <ChevronDown size={14} /></button>
+                </div>
+                <div className="ticket-list">
+                  {filteredTickets.map((ticket) => (
+                    <button key={ticket.id} className={`ticket-row ${selectedId === ticket.id ? 'selected' : ''}`} onClick={() => setSelectedId(ticket.id)}>
+                      <span className={`priority-badge ${priorityStyles[ticket.priority]}`}>{ticket.priority}</span>
+                      <div className="ticket-main">
+                        <div className="ticket-meta"><strong>{ticket.id}</strong><span>{ticket.customer}</span><span className="ticket-time">{ticket.time}</span></div>
+                        <p>{ticket.title}</p>
+                        <div className="ticket-tags"><span>{ticket.category}</span><span>{ticket.module}</span>{ticket.incident !== '—' && <span className="incident-tag"><AlertTriangle size={11} /> {ticket.incident}</span>}</div>
+                      </div>
+                      <div className="confidence"><span>{ticket.confidence}%</span><small>confianza</small></div>
+                      <ArrowUpRight className="row-arrow" size={16} />
+                    </button>
+                  ))}
+                </div>
+              </section>
+              {selected && <TicketDetail ticket={selected} />}
+            </div>
+          ) : (
+            <IncidentView incidents={incidents} onSelect={(id) => { setActiveTab('queue'); setSelectedId(id) }} />
+          )}
         </div>
       </section>
       {showComposer && <Composer onClose={() => setShowComposer(false)} processed={processed} onProcess={() => setProcessed(true)} />}
